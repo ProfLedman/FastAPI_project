@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
+from sqlalchemy import text
 
 # Import from updated modules
 from database import engine, get_db, Base
@@ -12,7 +13,9 @@ from models import ProductCreate, ProductUpdate, Product as ProductResponse
 app = FastAPI(
     title="Product API",
     description="A professional FastAPI product management system",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # CORS Configuration
@@ -20,7 +23,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],  # In production, use specific domains
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
 
@@ -35,16 +38,34 @@ def startup_event():
 async def root():
     return {"message": "Product API is running", "version": "1.0.0"}
 
+
 @app.get("/health", tags=["Health"])
 async def health_check(db: Session = Depends(get_db)):
     """Comprehensive health check including database connectivity"""
     try:
-        db.execute("SELECT 1")  # Test database connection
-        return {"status": "healthy", "database": "connected"}
+        # Get PostgreSQL version using text() for raw SQL
+        result = db.execute(text("SELECT version()"))
+        version = result.scalar()
+        
+        return {
+            "status": "healthy",
+            "database": {
+                "connected": True,
+                "version": version,
+                "type": "PostgreSQL"
+            },
+            "api_version": app.version
+        }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Database connection failed"
+            detail={
+                "status": "unhealthy",
+                "database": {
+                    "connected": False,
+                    "error": str(e)
+                }
+            }
         )
 
 # Product endpoints

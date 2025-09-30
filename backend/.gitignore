@@ -25,3 +25,6 @@ ENV/
 .idea/
 .vscode/
 *.db
+.env
+__pycache__/
+*.pyc
