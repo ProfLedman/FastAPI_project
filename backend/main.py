@@ -93,20 +93,30 @@ async def get_product_by_id(product_id: int, db: Session = Depends(get_db)):
 @app.post("/products", response_model=ProductResponse, status_code=status.HTTP_201_CREATED, tags=["Products"])
 async def create_product(product: ProductCreate, db: Session = Depends(get_db)):
     """Create a new product"""
-    # Check if product name already exists
-    existing_product = db.query(Product).filter(Product.name == product.name).first()
-    if existing_product:
+    try:
+        # Check if product name already exists
+        existing_product = db.query(Product).filter(Product.name == product.name).first()
+        if existing_product:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Product with this name already exists"
+            )
+        
+        # Create new product using dict unpacking
+        db_product = Product(**product.dict())
+        db.add(db_product)
+        db.commit()
+        db.refresh(db_product)
+        return db_product
+        
+    except Exception as e:
+        db.rollback()
+        print(f"Error creating product: {str(e)}")  # For debugging
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Product with this name already exists"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create product"
         )
     
-    db_product = Product(**product.dict())
-    db.add(db_product)
-    db.commit()
-    db.refresh(db_product)
-    return db_product
-
 @app.put("/products/{product_id}", response_model=ProductResponse, tags=["Products"])
 async def update_product(product_id: int, product_update: ProductUpdate, db: Session = Depends(get_db)):
     """Update an existing product"""
