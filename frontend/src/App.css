@@ -1,18 +1,52 @@
 /* Base */
 * { box-sizing: border-box; }
 :root {
-	--primary-500: #7c3aed;
-	--primary-400: #667eea;
-	--surface: rgba(255,255,255,.96);
-	--surface-border: rgba(255,255,255,.5);
-	--text-900: #111827;
-	--text-700: #374151;
-	--text-500: #6b7280;
+  /* Core Futuristic Colors */
+  --primary-500: #00d4ff;      /* Electric Cyan */
+  --primary-400: #7b61ff;      /* Neon Purple */
+  --surface: rgba(255,255,255,0.98);
+  --surface-border: rgba(255,255,255,0.7);
+  
+  /* Futuristic Text Colors */
+  --text-900: #0f172a;         /* Deep Space Blue */
+  --text-700: #334155;         /* Cosmic Gray */
+  --text-500: #64748b;         /* Moon Dust */
+  
+  /* Accent Colors */
+  --accent-cyber: #ff0080;     /* Cyber Pink */
+  --accent-neon: #00ff88;      /* Matrix Green */
+  --accent-electric: #0066ff;  /* Electric Blue */
+  
+  /* Gradient Combinations */
+  --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #7b61ff 100%);
+  --gradient-secondary: linear-gradient(135deg, #ff0080 0%, #ff6b00 100%);
+  --gradient-accent: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
 }
+
+
 body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--text-900); }
 
-/* Modern gradient background */
-.app-bg { min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+/* ===== UPDATED BACKGROUND ===== */
+.app-bg { 
+  min-height: 100vh; 
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  position: relative;
+}
+
+/* Cyber Grid Overlay */
+.app-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    linear-gradient(90deg, transparent 95%, rgba(0,212,255,0.03) 95%),
+    linear-gradient(0deg, transparent 95%, rgba(0,212,255,0.03) 95%);
+  background-size: 30px 30px;
+  pointer-events: none;
+}
 
 /* Topbar */
 .topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; color: #fff; }
@@ -52,130 +86,84 @@ body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto
 .product-form input:focus { border-color: #7c3aed; box-shadow: 0 0 0 4px rgba(124,58,237,0.16); }
 .form-actions { display: flex; gap: 10px; grid-column: 1 / -1; }
 
-/* Buttons */
-.btn { background: linear-gradient(135deg, var(--primary-400), var(--primary-500)); color: #fff; border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer; font-weight: 700; letter-spacing: .2px; transition: transform .12s, box-shadow .2s; }
-.btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(124,58,237,.32); }
-.btn:disabled { opacity: .6; cursor: not-allowed; }
-.btn-secondary { background: #e5e7eb; color: #111827; }
-.btn-light { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.45); }
-.btn-edit { background: #3b82f6; }
-.btn-delete { background: #ef4444; }
+/* ===== UPDATED COMPONENT STYLES ===== */
 
-/* Table */
-.product-table { 
-  width: 100%; 
-  min-width: 700px; /* Ensure minimum width for all columns */
-  border-collapse: separate; 
-  border-spacing: 0; 
-  table-layout: auto; /* Allow natural column sizing */
-}
-.product-table thead th { 
-  text-align: left; 
-  color: var(--text-700); 
-  padding: 14px 16px; 
-  font-weight: 700; 
-  background: linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,250,252,.9));
-  border-bottom: 2px solid #e5e7eb;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  position: relative;
+/* Buttons with futuristic gradients */
+.btn {
+  background: var(--gradient-primary);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 20px;
   cursor: pointer;
-  user-select: none;
-  transition: background-color 0.2s ease;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
-.product-table thead th.sortable:hover {
-  background: linear-gradient(135deg, rgba(240,245,255,.95), rgba(238,242,255,.9));
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 28px rgba(0,212,255,0.3),
+    0 0 0 1px rgba(0,212,255,0.2);
 }
-.product-table thead th.sort-asc::after {
-  content: ' ↑';
-  color: var(--primary-500);
-  font-weight: bold;
+
+.btn-edit {
+  background: linear-gradient(135deg, #00d4ff 0%, #0066ff 100%);
 }
-.product-table thead th.sort-desc::after {
-  content: ' ↓';
-  color: var(--primary-500);
-  font-weight: bold;
+
+.btn-delete {
+  background: linear-gradient(135deg, #ff0080 0%, #cc0066 100%);
 }
-.product-table thead th:nth-child(1) { width: 6%; } /* ID */
-.product-table thead th:nth-child(2) { width: 15%; } /* Name */
-.product-table thead th:nth-child(3) { width: 25%; } /* Description */
-.product-table thead th:nth-child(4) { width: 12%; } /* Price */
-.product-table thead th:nth-child(5) { width: 12%; } /* Quantity */
-.product-table thead th:nth-child(6) { width: 30%; } /* Actions - increased significantly */
-.product-table thead th:first-child { border-radius: 12px 0 0 0; }
-.product-table thead th:last-child { border-radius: 0 12px 0 0; }
-.product-table tbody tr { 
-  background: #fff; 
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+
+/* Enhanced table with futuristic accents */
+.product-table thead th {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(240,249,255,0.9));
+  border-bottom: 2px solid rgba(0,212,255,0.2);
 }
-.product-table tbody tr:hover { 
-  background: #fafbfc; 
-  box-shadow: 0 4px 16px rgba(0,0,0,.08);
-  transform: translateY(-1px);
+
+.product-table tbody tr:hover {
+  background: rgba(0,212,255,0.03);
+  box-shadow: 
+    0 4px 16px rgba(0,212,255,0.1),
+    inset 0 0 0 1px rgba(0,212,255,0.1);
 }
-.product-table tbody tr + tr td { border-top: 1px solid #f1f5f9; }
-.product-table tbody td { 
-  padding: 16px 16px; 
-  vertical-align: middle; 
-  border-left: 4px solid transparent;
-}
-.product-table tbody tr:hover td:first-child { border-left-color: var(--primary-500); }
-.row-actions { 
-  display: flex; 
-  gap: 6px; 
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 160px; /* Ensure minimum width for both buttons */
-}
-.row-actions .btn {
-  flex-shrink: 0; /* Prevent button shrinking */
-  min-width: 70px; /* Minimum button width */
-  padding: 8px 12px; /* Adjust padding for better fit */
-  font-size: 13px; /* Slightly smaller font */
-}
-.qty-badge { 
-  display: inline-flex; 
-  align-items: center;
-  justify-content: center;
-  min-width: 44px; 
-  height: 28px;
-  background: linear-gradient(135deg, #eef2ff, #e0e7ff); 
-  color: #3730a3; 
-  border: 1px solid #c7d2fe; 
-  border-radius: 8px; 
-  font-weight: 700; 
+
+/* Updated quantity badges */
+.qty-badge {
+  background: linear-gradient(135deg, #e0f7ff, #d4f1ff);
+  color: #0066cc;
+  border: 1px solid rgba(0,212,255,0.3);
+  border-radius: 8px;
+  font-weight: 700;
   font-size: 12px;
-  box-shadow: 0 1px 3px rgba(55,48,163,.1);
+  box-shadow: 0 2px 8px rgba(0,212,255,0.1);
 }
+
+/* Updated price cells */
 .price-cell {
   font-weight: 700;
   color: var(--primary-500);
   font-size: 15px;
 }
-.name-cell {
-  font-weight: 600;
+
+/* Search input enhancement */
+.search input:focus {
+  border-color: var(--primary-500);
+  box-shadow: 0 0 0 4px rgba(0,212,255,0.15);
+}
+
+/* Chip component update */
+.chip {
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,212,255,0.2);
   color: var(--text-900);
-}
-.desc-cell {
-  color: var(--text-500);
-  font-size: 14px;
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.muted { color: #6b7280; }
-.empty { 
-  text-align: center; 
-  color: #6b7280; 
-  padding: 32px 16px; 
-  font-style: italic;
-  background: rgba(249,250,251,.5);
-  border-radius: 12px;
-  margin: 16px 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  backdrop-filter: blur(8px);
 }
 
 /* Messages */
